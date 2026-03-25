@@ -106,17 +106,19 @@ jobs:
       - name: Update Package.swift with release URL and checksum
         run: |
           TAG="${GITHUB_REF_NAME}"
+          REPO="${{ github.repository }}"
+          RELEASE_URL="https://github.com/${REPO}/releases/download/${TAG}/shared.xcframework.zip"
           CHECKSUM="${{ steps.checksum.outputs.CHECKSUM }}"
           sed -i '' \
-            -e "s|PLACEHOLDER_VERSION|${TAG}|g" \
-            -e "s|PLACEHOLDER_CHECKSUM|${CHECKSUM}|g" \
-            SharedUIIOS/Package.swift
+            -e "s|let xcframeworkURL = \".*\"|let xcframeworkURL = \"${RELEASE_URL}\"|" \
+            -e "s|let xcframeworkChecksum = \".*\"|let xcframeworkChecksum = \"${CHECKSUM}\"|" \
+            Package.swift
 
       - name: Commit updated Package.swift
         run: |
           git config user.name  "github-actions[bot]"
           git config user.email "github-actions[bot]@users.noreply.github.com"
-          git add SharedUIIOS/Package.swift
+          git add Package.swift
           git commit -m "chore(release): update Package.swift for ${{ github.ref_name }}" || true
 
       - name: Push Package.swift update
