@@ -5,6 +5,7 @@ plugins {
     alias(libs.plugins.kotlinAndroid)
     alias(libs.plugins.composeMultiplatform)
     alias(libs.plugins.composeCompiler)
+    id("maven-publish")
 }
 
 android {
@@ -49,4 +50,29 @@ dependencies {
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.testExt.junit)
     androidTestImplementation(libs.androidx.espresso.core)
+}
+
+afterEvaluate {
+    publishing {
+        publications {
+            create<MavenPublication>("release") {
+                from(components["release"])
+                groupId = project.properties["GROUP_ID"]?.toString() ?: "id.tiooooo"
+                artifactId = "shared-ui-android"
+                version = project.properties["VERSION_NAME"]?.toString() ?: "0.0.1"
+            }
+        }
+        repositories {
+            maven {
+                name = "GitHubPackages"
+                url = uri(
+                    "https://maven.pkg.github.com/${System.getenv("REPOSITORY") ?: project.properties["GITHUB_REPOSITORY_FALLBACK"]}"
+                )
+                credentials {
+                    username = System.getenv("ACTOR")
+                    password = System.getenv("TOKEN")
+                }
+            }
+        }
+    }
 }
