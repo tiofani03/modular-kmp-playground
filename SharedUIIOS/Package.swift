@@ -1,8 +1,10 @@
-// swift-tools-version: 6.1
-// The swift-tools-version declares the minimum version of Swift required to build this package.
-
-// swift-tools-version:6.1
+// swift-tools-version: 5.9
 import PackageDescription
+
+// These values are automatically updated by the CI/CD release workflow.
+// Do not edit XCFRAMEWORK_URL or XCFRAMEWORK_CHECKSUM manually.
+let xcframeworkURL = "https://github.com/tiofani03/modular-kmp-playground/releases/download/PLACEHOLDER_VERSION/shared.xcframework.zip"
+let xcframeworkChecksum = "PLACEHOLDER_CHECKSUM"
 
 let package = Package(
     name: "SharedUIIOS",
@@ -19,7 +21,8 @@ let package = Package(
 
         .binaryTarget(
             name: "shared",
-            path: "Frameworks/shared.xcframework"
+            url: xcframeworkURL,
+            checksum: xcframeworkChecksum
         ),
 
         .target(

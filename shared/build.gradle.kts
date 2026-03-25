@@ -4,7 +4,11 @@ import org.jetbrains.kotlin.gradle.plugin.mpp.apple.XCFramework
 plugins {
     alias(libs.plugins.kotlinMultiplatform)
     alias(libs.plugins.androidLibrary)
+    id("maven-publish")
 }
+
+group = project.properties["GROUP_ID"]?.toString() ?: "id.tiooooo"
+version = project.properties["VERSION_NAME"]?.toString() ?: "0.0.1"
 
 kotlin {
     val xcframework = XCFramework()
@@ -47,3 +51,40 @@ android {
         minSdk = libs.versions.android.minSdk.get().toInt()
     }
 }
+
+publishing {
+    repositories {
+        maven {
+            name = "GitHubPackages"
+            url = uri(
+                "https://maven.pkg.github.com/${System.getenv("GITHUB_REPOSITORY") ?: project.properties["GITHUB_REPOSITORY_FALLBACK"]}"
+            )
+            credentials {
+                username = System.getenv("GITHUB_ACTOR")
+                password = System.getenv("GITHUB_TOKEN")
+            }
+        }
+    }
+}
+
+// ---------------------------------------------------------------------------
+// XCFramework packaging tasks
+// ---------------------------------------------------------------------------
+
+val xcframeworkName = "shared"
+val xcframeworkOutputDir = layout.buildDirectory.dir("XCFrameworks/release")
+
+/**
+ * Zips the assembled XCFramework so it can be attached to a GitHub Release
+ * and referenced by the Swift Package Manager binary target.
+ *
+ * Run after: ./gradlew :shared:assembleSharedReleaseXCFramework
+ */
+val zipXCFramework by tasks.registering(Zip::class) {
+    dependsOn("assembleSharedReleaseXCFramework")
+    from(xcframeworkOutputDir)
+    include("$xcframeworkName.xcframework/**")
+    archiveFileName.set("$xcframeworkName.xcframework.zip")
+    destinationDirectory.set(layout.buildDirectory.dir("distributions"))
+}
+
