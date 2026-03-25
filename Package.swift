@@ -20,14 +20,15 @@ let package = Package(
     targets: [
 
         .binaryTarget(
-            name: "shared",
+            name: "Shared",
             url: xcframeworkURL,
             checksum: xcframeworkChecksum
         ),
 
         .target(
             name: "SharedUIIOS",
-            dependencies: ["shared"]
+            dependencies: ["Shared"],
+            path: "SharedUIIOS/Sources/SharedUIIOS"
         )
     ]
 )
