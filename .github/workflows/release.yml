@@ -47,16 +47,16 @@ jobs:
       - name: Publish :shared to GitHub Packages
         run: ./gradlew :shared:publishAllPublicationsToGitHubPackagesRepository -PVERSION_NAME=${{ steps.version.outputs.VERSION }}
         env:
-          GITHUB_ACTOR: ${{ github.actor }}
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-          GITHUB_REPOSITORY: ${{ github.repository }}
+          ACTOR: ${{ github.actor }}
+          TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          REPOSITORY: ${{ github.repository }}
 
       - name: Publish :shared-ui-android to GitHub Packages
         run: ./gradlew :shared-ui-android:publishReleasePublicationToGitHubPackagesRepository -PVERSION_NAME=${{ steps.version.outputs.VERSION }}
         env:
-          GITHUB_ACTOR: ${{ github.actor }}
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-          GITHUB_REPOSITORY: ${{ github.repository }}
+          ACTOR: ${{ github.actor }}
+          TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          REPOSITORY: ${{ github.repository }}
 
   # ---------------------------------------------------------------------------
   # 2. Build XCFramework, zip it, compute SPM checksum, update Package.swift,
@@ -138,4 +138,4 @@ jobs:
           generate_release_notes: true
           files: shared/build/distributions/shared.xcframework.zip
         env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          TOKEN: ${{ secrets.GITHUB_TOKEN }}

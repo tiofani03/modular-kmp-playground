@@ -66,11 +66,11 @@ afterEvaluate {
             maven {
                 name = "GitHubPackages"
                 url = uri(
-                    "https://maven.pkg.github.com/${System.getenv("GITHUB_REPOSITORY") ?: project.properties["GITHUB_REPOSITORY_FALLBACK"]}"
+                    "https://maven.pkg.github.com/${System.getenv("REPOSITORY") ?: project.properties["GITHUB_REPOSITORY_FALLBACK"]}"
                 )
                 credentials {
-                    username = System.getenv("GITHUB_ACTOR")
-                    password = System.getenv("GITHUB_TOKEN")
+                    username = System.getenv("ACTOR")
+                    password = System.getenv("TOKEN")
                 }
             }
         }
